@@ -1,20 +1,16 @@
-import read from './reader';
 import json from './parser';
+import read from './reader';
+import GameSaving from './gameSaving';
 
+let save = new GameSaving();
 export default class GameSavingLoader {
   static load() {
-    const value = read()
-      .then(response => json(response))
-      .then(response2 => response2);
-
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(value);
-      }, 500);
-    });
+    return read()
+      .then(resolve => json(resolve))
+      .then(saving => {
+        save = JSON.parse(saving);
+        return save;
+      })
+      .catch(error => { throw error; });
   }
 }
-
-// GameSavingLoader.load().then(saving => {
-//   console.log(JSON.parse(saving));
-// });

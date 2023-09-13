@@ -1,18 +1,17 @@
-import read from './reader';
 import json from './parser';
+import read from './reader';
+import GameSaving from './gameSaving';
 
-export default class GameSavingLoader {
-  static async load() {
-    const data = await read();
-    const value = await json(data);
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(value);
-      }, 500);
-    });
+let save = new GameSaving();
+const gameSave = (async () => {
+  try {
+    const readResolve = await read();
+    const saving = await json(readResolve);
+    save = JSON.parse(saving);
+    return save;
+  } catch (error) {
+    throw new Error('Ошибка!');
   }
-}
+})();
 
-// (async () => {
-//   console.log(JSON.parse(await GameSavingLoader.load()));
-// })();
+export default gameSave;
